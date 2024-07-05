@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/mystyle.css">
+
+    <title>IT Account Manager - Identify Account Status</title>
+  </head>
+  <body>
+    <div id="app">
+    {% include "header.html" %}
+    <div class="container">
+      <p class="h3">Identify Account Status  <button type="button" class="btn btn-primary" @click="get_table_data()" :disabled="getting_table_data">Refresh</button></p> 
+      <div v-if="!getting_table_data">
+        <div class="input-group mb-3 w-50">
+          <span class="input-group-text" id="basic-addon1">Search</span>
+          <input v-model="search" type="text" class="form-control" placeholder="username, name, status etc..." aria-label="search" aria-describedby="basic-addon1">
+        </div>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Staff ID
+                <a @click="sort_table('staff_id')" class="btn btn-primary btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                </svg>
+              </a>
+              </th>
+              <th scope="col">Name
+                <a @click="sort_table('name')" class="btn btn-primary btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+                </svg>
+              </a>
+              </th>
+              <th scope="col">Username</th>
+              <th scope="col">OU</th>
+              <th scope="col">Synergetic Status</th>
+              <th scope="col">AD Status</th>
+              <th scope="col">AD & Syn Conflicts #${syn_ad_conflicts}$</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr :id="data[1]" v-for="data, index in table_data">
+              <th scope="row">${index+1}$</th>
+              <td>${data[1]}$</td>
+              <td>${data[2]}$</td>
+              <td>${data[0]}$ </td>
+              <td>${data[5]}$ </td>
+              <td v-if="data[3]" class="text-success h6">Active</td><td v-else class="text-danger h6">Inactive</td>
+              <td v-if="data[4] == 'Deleted'" class="text-danger h6">${data[4]}$</td>
+              <td v-else-if="data[4] == 'Disabled'" class="text-warning h6">${data[4]}$</td>
+              <td v-else-if="data[4] == 'Enabled'" class="text-success h6">${data[4]}$</td>
+              <td v-if="data[3] == false && data[4] == 'Enabled'" class="text-danger conflict h6">Conflict</td>
+              <td v-else class="text-success h6">Okay</td>
+              <td>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                <button v-if="data[4] == 'Disabled' || data[4] == 'Enabled'" type="button" class="btn btn-secondary btn-sm" @click="get_ad_group_membership(data[0])" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                    <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                  </svg>
+                </button>
+                <button v-if="data[4] != 'Deleted'" type="button" class="btn btn-danger btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-person-fill-dash" viewBox="0 0 16 16">
+                  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                  <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+                </svg></button>
+              </div>
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+      <div v-else>
+        <div class="d-flex align-items-center position-absolute top-50 start-50">
+          <strong>Loading Table Data...</strong>
+          <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+        </div>
+      </div>
+      </div>
+      <div class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 v-if="!getting_groups" class="modal-title" id="exampleModalLabel">AD Group Membership for ${groups.samaccountname}$</h5>
+        <div v-else class="d-flex align-items-center">
+          <strong>Getting AD groups...</strong>
+          <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group">
+          <li v-for="group in groups.groups" class="list-group-item">${group}$</li>
+        </ul>
+      </div>
+    </div>
+</div>
+</div>
+    {% include "jsbody.html" %}
+    <script type="module">
+      import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+    
+      createApp({
+        setup() {
+          const table_data = ref({})
+          const getting_table_data = ref(false)
+          const syn_ad_conflicts = ref(0)
+          const groups = ref({})
+          const getting_groups = ref(false)
+          const search = ref('')
+          const sort_track = ref(false)
+          return {
+            table_data,
+            getting_table_data,
+            syn_ad_conflicts,
+            groups,
+            getting_groups,
+            search,
+            sort_track
+          }
+        },
+        compilerOptions: {
+    delimiters: ["${", "}$"],
+  },
+  methods: {
+      sort_table(column){
+        if (column == 'staff_id' && this.sort_track){
+          this.table_data.sort((a, b) =>  b[1] - a[1])
+          this.sort_track = !this.sort_track
+        }
+        else if(column == 'staff_id' && !this.sort_track){
+          this.table_data.sort((a, b) => a[1] - b[1] )
+          this.sort_track = !this.sort_track
+        }
+        if (column == 'name' && this.sort_track){
+          this.table_data.sort((a, b) => a[2].localeCompare(b[2]))
+          this.sort_track = !this.sort_track
+        }
+        else if(column == 'name' && !this.sort_track){
+          this.table_data.sort((a, b) => b[2].localeCompare(a[2]))
+          this.sort_track = !this.sort_track
+        }
+      },
+      add_to_conflict() {
+        this.syn_ad_conflicts = 0
+        for (let n in this.table_data){
+          if (this.table_data[n][3] == false && this.table_data[n][4] == 'Enabled'){
+          this.syn_ad_conflicts ++
+          }
+        }
+    },
+    get_table_data() {
+      this.getting_table_data = true,
+                axios({
+          method: 'get',
+          url: '/get_account_status/',
+        })
+        .then((response) => {
+          this.getting_table_data = false
+          this.table_data = response.data
+          this.add_to_conflict()
+
+
+        }, (error) => {
+          this.getting_table_data = false
+          console.log(error);
+        });
+    },
+    get_ad_group_membership(samaccountname) {
+          this.groups = {}
+          this.getting_groups = true
+                axios({
+          method: 'get',
+          url: '/get_ad_group_membership/' + samaccountname,
+        })
+        .then((response) => {
+          this.groups = response.data
+          this.getting_groups = false
+          console.log(this.groups.samaccountname)
+        }, (error) => {
+          this.getting_groups = false
+          console.log(error);
+        });
+    },
+
+    },
+    mounted (){
+      this.get_table_data()
+    },
+    watch: {
+    search(newValue, oldValue) {
+      for(let entry in this.table_data){
+      if (!this.table_data[entry].join(' ').toLowerCase().includes(newValue.toLowerCase())){
+        document.getElementById(this.table_data[entry][1]).hidden = true
+      }
+      
+      else if (this.table_data[entry].join(' ').toLowerCase().includes(newValue.toLowerCase())){
+        document.getElementById(this.table_data[entry][1]).hidden = false
+      }
+      if (this.table_data[entry][3] == false && this.table_data[entry][4] == 'Enabled' && 'conflict'.includes(newValue.toLowerCase())){
+        document.getElementById(this.table_data[entry][1]).hidden = false
+      }
+      if (this.table_data[entry][3] == true && 'okay'.includes(newValue.toLowerCase())){
+        document.getElementById(this.table_data[entry][1]).hidden = false
+      }
+      if (this.table_data[entry][3] == true && 'active'.includes(newValue.toLowerCase())){
+        document.getElementById(this.table_data[entry][1]).hidden = false
+      }
+      if (this.table_data[entry][3] == false && 'inactive'.includes(newValue.toLowerCase())){
+        document.getElementById(this.table_data[entry][1]).hidden = false
+      }
+      }
+    },
+  },
+      }).mount('#app')
+    </script>
+  </body>
+</html>
+

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/mystyle.css">
+    <title>IT Account Manager - Main Menu</title>
+  </head>
+  <body>
+    
+    {% include "header.html" %}
+    
+    <div class="container">
+      
+      <div class="row pb-2 pt-2">
+        <div class="col-6 text-center">
+          <div class="card" >
+            <div class="card-body">
+              <h5 class="card-title">Staff Account Management</h5>
+              <div class="row">
+                <div class="col-6">
+                  <a href="/create_account_dash"><svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="gray" class="bi bi-person-fill-add" viewBox="0 0 16 16">
+                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                    <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+                  </svg><br>Create Staff Account</a>
+                </div>
+                <div class="col-6 text-center">
+                  <a href="/identify_account_status_dash"><svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="gray" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                  </svg><br>Identify Account Status</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 text-center">
+          <div class="card" >
+            <div class="card-body">
+              <h5 class="card-title">Student Account Management</h5>
+              <div class="row">
+                <div class="col-6">
+                  <a href="/create_account_dash"><svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="blue" class="bi bi-person-fill-add" viewBox="0 0 16 16">
+                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                    <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+                  </svg><br>Create Student Account</a>
+                </div>
+                <div class="col-6 text-center">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        </div>
+        
+      <div class="row pb-2 pt-2">
+        <div class="col-6 text-center">
+          <div class="card" >
+            <div class="card-body">
+              <h5 class="card-title">Parent Account Management</h5>
+              <div class="row">
+                <div class="col-6">
+                  <a href="/create_account_dash"><svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="red" class="bi bi-person-fill-add" viewBox="0 0 16 16">
+                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                    <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+                  </svg><br>Create Parent Account</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        </div>
+      </div>
+    </div>
+    {% include "jsbody.html" %}
+  </body>
+</html>
+
